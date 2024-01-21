@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Base Job Solution</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .navbar{
+            padding: 5px 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        .navbar h2{
+            text-align: center;
+            font-size: 22px;
+        }
+        .container{
+            display: flex;
+            row-gap: 30px;
+            min-height: 100vh;
+            align-items: stretch;
+        }
+        #topicContainer{
+            padding: 20px 10px;
+            font-size: 16px;
+            width: 300px;
+            background: #f8f8f8;
+            max-height: 100vh;
+            overflow: auto;
+            height: 100%;
+            margin: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .topic__list{
+            padding: 10px;
+            cursor: pointer;
+        }
+        .topic__list:hover{
+            color: rgb(18, 147, 78);
+        }
+        .topic__heading{
+            background-image: linear-gradient(-225deg, #FF057C 0%, #8D0B93 50%, #321575 100%);
+             padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            color: #fff;
+            border: #321575 1px solid;
+        }
+        .topic__heading h3{
+            text-align: center;
+            font-size: 20px;
+            line-height: 10px;
+        }
+
+        #qsnContiner{
+            padding: 10px 20px;
+            /* max-width: 500px;
+            margin: 0 auto; */
+            /* margin-top: 40px; */
+            max-height: 100vh;
+            overflow: auto;
+        }
+        .qsn__item{
+            padding: 20px;
+            background: #f8f8f8;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .qsn__option{
+            font-size: 16px;
+            line-height: 23px;
+        }
+        .qsn{
+            font-size: 16px;
+            line-height: 23px;
+            font-weight: 600;
+        }
+        .showAnsBtn{
+            display: block;
+            padding: 5px;
+            text-align: center;
+            background: #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            border: 1px solid #666;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .qsnAns{
+            display: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: #ddd;
+        }
+        .qsnTag{
+            font-size: 12px;
+            background: #eee;
+            margin-top: 10px;
+            display: block;
+            padding: 5px;
+            border-radius: 8px;
+        }
+        .qsn__search{
+            display: flex;
+            /* max-width: 100; */
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            align-items: center;
+            background: #fff;
+            position: fixed;
+            bottom: 0;
+        }
+        .search__box{
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        .search__box input{
+            width: 90px;
+        }
+        #goTop{
+            position: sticky;
+            right: 50px;
+            bottom: 50px;
+            padding: 7px 12px;
+            background: #000000e6;
+            display: inline;
+            color: #fff;
+            z-index: 999;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>Topic Base Job Solution</h2>
+    </div>
+    <div class="container">
+        <div id="topicContainer">
+        </div>
+        <div id="qsnContiner">
+            
+        </div>
+    </div>
+
+    <a href="#" id="goTop">^ Top</a>
+
+    <div class="qsn__search">
+        <div class="search__box">
+            <b>Find Question</b>
+            <input id="qno" placeholder="Question No." type="number">
+            <b>/</b>
+            <b id="totalQsn"></b>
+            <button onclick="findQsn()">Find</button>
+        </div>
+    </div>
+    
+    <script>
+        fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/data.json")
+        .then(res => res.json())
+        .then(res=>{
+            // makeList(res)
+            makeTopic(res)
+        })
+       
+       
+        function makeTopic(res){
+            const uniqueTopic = [...new Set(res.map((item) => item.sub_category))];
+            const sub = res[0].subject
+            let topicContainer = `
+                <h3 class="topic__sub">${sub}</h3>
+            `;
+            uniqueTopic.forEach((i) => {
+                topicContainer += `
+                    <div class="topic__list"><a onclick="makeQsnList(this)">${i}</a></div>
+                    
+                `;
+            })
+            document.getElementById("topicContainer").innerHTML = topicContainer;
+            firstQsnList(uniqueTopic[0]);
+        }
+
+
+        function firstQsnList(topic){
+        const myTopic = topic;
+        fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/data.json")
+        .then(res => res.json())
+        .then(res=>{
+            let topicList = res.filter((items)=>{
+                return items.sub_category == myTopic;
+            })
+            document.getElementById("totalQsn").textContent = topicList.length;
+            const qsnContiner = document.getElementById("qsnContiner");
+            let html =`
+                <div class="topic__heading">
+                    <h3>${myTopic}</h3>
+                    <b>মোট প্রশ্ন: ${topicList.length} টি</b>
+                </div>
+            `;
+            topicList.forEach((el, i) => {
+                html += `
+                    <div class="qsn__item" id="qsn-${i+1}">
+                        <h4 class="qsn"><span>${i+1}. </span>${el.question}</h4>
+                        <p class="qsn__option"><b>(a) </b>${el.a}</p>
+                        <p class="qsn__option"><b>(b) </b>${el.b}</p>
+                        <p class="qsn__option"><b>(c) </b>${el.c}</p>
+                        <p class="qsn__option"><b>(d) </b>${el.c}</p>
+                        <div onclick="showAns(this)">
+                            <button class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${el.answer})</p>
+                        </div>
+                        <p class="qsnTag">${el.tag}</p>
+
+                    </div>
+                `;
+            });
+
+            qsnContiner.innerHTML = html;
+        })
+
+       }
+       
+       function makeQsnList(topic){
+        const myTopic = topic.textContent;
+        fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/data.json")
+        .then(res => res.json())
+        .then(res=>{
+            let topicList = res.filter((items)=>{
+                return items.sub_category == myTopic;
+            })
+            document.getElementById("totalQsn").textContent = topicList.length;
+            const qsnContiner = document.getElementById("qsnContiner");
+            let html =`
+                <div class="topic__heading">
+                    <h3>${myTopic}</h3>
+                    <b>মোট প্রশ্ন: ${topicList.length} টি</b>
+                </div>
+            `;
+            topicList.forEach((el, i) => {
+                html += `
+                    <div class="qsn__item" id="qsn-${i+1}">
+                        <h4 class="qsn"><span>${i+1}. </span>${el.question}</h4>
+                        <p class="qsn__option"><b>(a) </b>${el.a}</p>
+                        <p class="qsn__option"><b>(b) </b>${el.b}</p>
+                        <p class="qsn__option"><b>(c) </b>${el.c}</p>
+                        <p class="qsn__option"><b>(d) </b>${el.c}</p>
+                        <div onclick="showAns(this)">
+                            <button class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${el.answer})</p>
+                        </div>
+                        <p class="qsnTag">${el.tag}</p>
+
+                    </div>
+                `;
+            });
+
+            qsnContiner.innerHTML = html;
+        })
+
+       }
+        
+
+       function findQsn(){
+            let qno = document.getElementById("qno").value;
+            if(!qno == "" && !parseInt(document.getElementById("totalQsn").textContent) < qno ){
+                window.location.href = "#qsn-"+qno;
+            }
+            if(parseInt(document.getElementById("totalQsn").textContent) < qno ){
+                alert("You enter a number lager than total question");
+            }
+
+        }
+        
+        function showAns(showBtn){
+            if(showBtn.children[1].style.display ==="none"){
+                showBtn.children[1].style.display ="block";
+                showBtn.children[0].textContent ="Hide Answer";
+            }else{
+                showBtn.children[1].style.display ="none";
+                showBtn.children[0].textContent ="Show Answer";
+            }
+            
+            
+        }
+    </script>
+</body>
+</html>
