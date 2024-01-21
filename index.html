@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Base Job Solution</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        #qsnContiner{
+            padding: 10px 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .qsn__item{
+            padding: 20px;
+            background: #f8f8f8;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .qsn__option{
+            font-size: 16px;
+            line-height: 23px;
+        }
+        .qsn{
+            font-size: 16px;
+            line-height: 23px;
+            font-weight: 600;
+        }
+        .showAnsBtn{
+            display: block;
+            padding: 5px;
+            text-align: center;
+            background: #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            border: 1px solid #666;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .qsnAns{
+            display: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: #ddd;
+            width: 200px;
+        }
+        .qsnTag{
+            font-size: 12px;
+            background: #eee;
+            margin-top: 10px;
+            display: block;
+            padding: 5px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="continer">
+        <div id="qsnContiner">
+            
+        </div>
+    </div>
+    
+    <script>
+        fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/data.json")
+        .then(res => res.json())
+        .then(res=>{
+            makeList(res)
+        })
+
+        function makeList(questions){
+            const qsnContiner = document.getElementById("qsnContiner");
+            let html ='';
+            questions.forEach((el, i) => {
+                html += `
+                    <div class="qsn__item">
+                        <h4 class="qsn"><span>${i+1}. </span>${el.question}</h4>
+                        <p class="qsn__option"><b>(a) </b>${el.a}</p>
+                        <p class="qsn__option"><b>(b) </b>${el.b}</p>
+                        <p class="qsn__option"><b>(c) </b>${el.c}</p>
+                        <p class="qsn__option"><b>(d) </b>${el.c}</p>
+                        <div onclick="showAns(this)">
+                            <button class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${el.answer})</p>
+                        </div>
+                        <p class="qsnTag">${el.tag}</p>
+
+                    </div>
+                `;
+            });
+
+            qsnContiner.innerHTML = html;
+        }
+
+        
+        function showAns(showBtn){
+            if(showBtn.children[1].style.display ==="none"){
+                showBtn.children[1].style.display ="block";
+                showBtn.children[0].textContent ="Hide Answer";
+            }else{
+                showBtn.children[1].style.display ="none";
+                showBtn.children[0].textContent ="Show Answer";
+            }
+            
+            
+        }
+    </script>
+</body>
+</html>
