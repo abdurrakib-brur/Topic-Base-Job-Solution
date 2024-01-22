@@ -97,6 +97,7 @@
             border: 1px solid #666;
             width: 100%;
             margin-top: 20px;
+            cursor: pointer;
         }
         .qsnAns{
             display: none;
@@ -216,7 +217,7 @@
             `;
             uniqueTopic.forEach((i) => {
                 topicContainer += `
-                    <div class="topic__list"><a onclick="makeQsnList(this)">${i}</a></div>
+                    <div class="topic__list"><a href="#" onclick="makeQsnList(this)">${i}</a></div>
                     
                 `;
             })
@@ -265,6 +266,7 @@
        }
        
        function makeQsnList(topic){
+        qsnContiner.innerHTML = 'Loading...';
         const myTopic = topic.textContent;
         fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
         .then(res => res.json())
