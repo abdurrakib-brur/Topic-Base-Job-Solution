@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Topic Base Job Solution</title>
     <style>
+        *{
+            box-sizing: border-box;
+        }
         body{
             margin: 0;
             padding: 0;
@@ -27,7 +30,7 @@
         #topicContainer{
             padding: 20px 10px;
             font-size: 16px;
-            width: 300px;
+            width: 30%;
             background: #f8f8f8;
             max-height: 100vh;
             overflow: auto;
@@ -65,6 +68,7 @@
             /* margin-top: 40px; */
             max-height: 100vh;
             overflow: auto;
+            width: 70%;
         }
         .qsn__item{
             padding: 20px;
@@ -108,6 +112,7 @@
             display: block;
             padding: 5px;
             border-radius: 8px;
+            word-wrap: break-word;
         }
         .qsn__search{
             display: flex;
@@ -131,8 +136,7 @@
         }
         #goTop{
             position: sticky;
-            right: 50px;
-            bottom: 50px;
+            bottom: 60px;
             padding: 7px 12px;
             background: #000000e6;
             display: inline;
@@ -144,6 +148,30 @@
         }
         a{
             text-decoration: none;
+        }
+
+        @media screen and (max-width: 600px){
+            .container{
+                display: block;
+                min-height: 100%;
+            }
+            #topicContainer{
+                width: auto;
+                word-wrap: break-word;
+                margin: 20px;
+            }
+            #qsnContiner{
+                max-height: 100%;
+                overflow: inherit;
+                width: 100%;
+            }
+            .search__box input{
+                width: 50px;
+            }
+        .search__box{
+            font-size: 14px;
+        }
+
         }
     </style>
 </head>
@@ -159,7 +187,7 @@
         </div>
     </div>
 
-    <a href="#qsn-1" id="goTop">^ Top</a>
+    <a href="#heading" id="goTop">^ Top</a>
 
     <div class="qsn__search">
         <div class="search__box">
@@ -184,7 +212,7 @@
             const uniqueTopic = [...new Set(res.map((item) => item.sub_category))];
             const sub = res[0].subject
             let topicContainer = `
-                <h3 class="topic__sub">${sub}</h3>
+                <h3 class="topic__sub">${sub} এর টপিকসমূহ</h3>
             `;
             uniqueTopic.forEach((i) => {
                 topicContainer += `
@@ -208,7 +236,7 @@
             document.getElementById("totalQsn").textContent = topicList.length;
             const qsnContiner = document.getElementById("qsnContiner");
             let html =`
-                <div class="topic__heading">
+                <div id="heading" class="topic__heading">
                     <h3>${myTopic}</h3>
                     <b>মোট প্রশ্ন: ${topicList.length} টি</b>
                 </div>
@@ -220,7 +248,7 @@
                         <p class="qsn__option"><b>(a) </b>${el.a}</p>
                         <p class="qsn__option"><b>(b) </b>${el.b}</p>
                         <p class="qsn__option"><b>(c) </b>${el.c}</p>
-                        <p class="qsn__option"><b>(d) </b>${el.c}</p>
+                        <p class="qsn__option"><b>(d) </b>${el.d}</p>
                         <div onclick="showAns(this)">
                             <button class="showAnsBtn" >Show Answer</button>
                             <p class="qsnAns"><span>Ans: </span>(${el.answer})</p>
@@ -247,7 +275,7 @@
             document.getElementById("totalQsn").textContent = topicList.length;
             const qsnContiner = document.getElementById("qsnContiner");
             let html =`
-                <div class="topic__heading">
+                <div id="heading" class="topic__heading">
                     <h3>${myTopic}</h3>
                     <b>মোট প্রশ্ন: ${topicList.length} টি</b>
                 </div>
@@ -259,7 +287,7 @@
                         <p class="qsn__option"><b>(a) </b>${el.a}</p>
                         <p class="qsn__option"><b>(b) </b>${el.b}</p>
                         <p class="qsn__option"><b>(c) </b>${el.c}</p>
-                        <p class="qsn__option"><b>(d) </b>${el.c}</p>
+                        <p class="qsn__option"><b>(d) </b>${el.d}</p>
                         <div onclick="showAns(this)">
                             <button class="showAnsBtn" >Show Answer</button>
                             <p class="qsnAns"><span>Ans: </span>(${el.answer})</p>
