@@ -318,9 +318,10 @@
 
        function findQsn(){
             let qno = document.getElementById("qno").value;
+            document.getElementById("qno").value = "";
             if(!qno == "" && !parseInt(document.getElementById("totalQsn").textContent) < qno ){
                 window.location.href = "#qsn-"+qno;
-                qno = "";
+                
             }
             if(parseInt(document.getElementById("totalQsn").textContent) < qno ){
                 alert("You enter a number lager than total question");
