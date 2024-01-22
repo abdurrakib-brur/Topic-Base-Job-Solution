@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search in Json</title>
+</head>
+<body>
+    <div style="padding: 10px; display: flex; align-items: center; justify-content: space-evenly; column-gap: 200px;">
+        <input style="padding: 10px; flex-grow: 1; font-size: 18px;" onchange="search()" onkeyup="search()" type="text" id="searchInput" placeholder="Search question">
+        <!-- <button onclick="search()">Search</button> -->
+        <button onclick="removeDuplicate(JSON.parse(localStorage.getItem('indexArr')))">Empty trash</button>
+    </div>
+    <div id="searchResult" style="max-height: 90vh; overflow: auto;">
+
+    </div>
+
+    <script>      
+onload = ()=>{
+    document.getElementById("searchInput").value = "";
+    document.getElementById("searchInput").focus();
+    fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+            .then(res => res.json())
+            .then(res=>{
+                let searchArray = [];
+                let html = '';
+                const searchInput = document.getElementById("searchInput").value;
+                res.forEach((element, i) => {
+                    if(element.question.includes(searchInput)){
+                        element.index_of_main = i;
+                        searchArray.push(element)
+                    }
+                });
+                searchArray.forEach((i )=> {
+                    html += `
+                    <div style="margin: 10px; padding: 10px; border-radius: 4px; border:1px solid #444" id="qsn-${i.index_of_main}">
+                        <h3>${i.question}</h3>
+                        <p>a) ${i.a}</p>
+                        <p>b) ${i.b}</p>
+                        <p>c) ${i.c}</p>
+                        <p>d) ${i.d}</p>
+                        <p>Ans: ${i.answer}</p>
+                        <p>Index: ${i.index_of_main}</p>
+                        
+                        <div onclick="saveForDelete(this)" style="text-align: left;">
+                            <input type="hidden" value="${i.index_of_main}">
+                            <button>Move to trash</button>
+                        </div>
+                    </div>
+                    `;
+                })
+                document.getElementById("searchResult").innerHTML = html;
+
+                if(JSON.parse(localStorage.getItem("indexArr")) !== null){
+                    let idx = [];
+                    let indexArr = JSON.parse(localStorage.getItem("indexArr"));
+                    indexArr.forEach(i=>{
+                        idx.push(parseInt(i));
+                    })
+                    for(var i=0; i<idx.length; i++){
+                        if(document.getElementById("qsn-"+idx[i])){
+                            document.getElementById("qsn-"+idx[i]).style.display = "none";
+                        }
+                    }
+                }
+
+
+            })
+}
+        function search(){            
+            fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+            .then(res => res.json())
+            .then(res=>{
+                let searchArray = [];
+                let html = '';
+                const searchInput = document.getElementById("searchInput").value;
+                res.forEach((element, i) => {
+                    if(element.question.includes(searchInput)){
+                        element.index_of_main = i;
+                        searchArray.push(element)
+                    }
+                });
+                searchArray.forEach((i )=> {
+                    html += `
+                    <div style="margin: 10px; padding: 10px; border-radius: 4px; border:1px solid #444" id="qsn-${i.index_of_main}s">
+                        <h3>${i.question}</h3>
+                        <p>a) ${i.a}</p>
+                        <p>b) ${i.b}</p>
+                        <p>c) ${i.c}</p>
+                        <p>d) ${i.d}</p>
+                        <p>Ans: ${i.answer}</p>
+                        <p>Index: ${i.index_of_main}</p>
+                        
+                        <div onclick="saveForDelete(this)" style="text-align: left;">
+                            <input type="hidden" value="${i.index_of_main}">
+                            <button>Move to trash</button>
+                        </div>
+                    </div>
+                    `;
+                })
+                document.getElementById("searchResult").innerHTML = html;
+
+                if(JSON.parse(localStorage.getItem("indexArr")) !== null){
+                    let idx = [];
+                    let indexArr = JSON.parse(localStorage.getItem("indexArr"));
+                    indexArr.forEach(i=>{
+                        idx.push(parseInt(i));
+                    })
+                    for(var i=0; i<idx.length; i++){
+                        if(document.getElementById("qsn-"+idx[i]+"s")){
+                            document.getElementById("qsn-"+idx[i]+"s").style.display = "none";
+                        }
+                    }
+                }
+
+
+            })
+            
+          
+        }
+
+        function saveForDelete(el){                
+                if(localStorage.getItem("indexArr") === null){
+                    
+                    let indexArr = [];
+                    const indexForSave = el.children[0].value;
+                    indexArr.push(indexForSave);
+                    localStorage.setItem("indexArr", JSON.stringify(indexArr));
+                }else{
+                    let indexArr = JSON.parse(localStorage.getItem("indexArr"));                
+                    const indexForSave = el.children[0].value;
+                    indexArr.push(indexForSave);
+                    localStorage.setItem("indexArr", JSON.stringify(indexArr));
+                }
+
+                console.log(JSON.parse(localStorage.getItem("indexArr")));
+                
+
+                el.style.display = 'none';
+                el.parentElement.style.display = 'none';
+            }
+
+        function removeDuplicate(indexArr){
+            fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+            .then(res => res.json())
+            .then(res=>{
+                let idx = [];
+                indexArr.forEach(i=>{
+                    idx.push(parseInt(i));
+                })
+                
+                for(var i = 0 ; i<idx.length; i++){
+                    res.splice(idx[i],1)
+                }
+
+                // localStorage.removeItem("indexArr");
+
+                document.write(JSON.stringify(res))
+            })
+        }
+    </script>
+</body>
+</html>
