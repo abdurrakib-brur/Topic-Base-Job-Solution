@@ -6,22 +6,23 @@
     <title>Search in Json</title>
 </head>
 <body>
-    <div style="padding: 10px; display: flex; align-items: center; justify-content: space-evenly; column-gap: 200px;">
+    <div style="padding: 10px; display: flex; align-items: center; justify-content: space-evenly; column-gap: 100px;">
         <input style="padding: 10px; flex-grow: 1; font-size: 18px;" onchange="search()" onkeyup="search()" type="text" id="searchInput" placeholder="Search question">
         <!-- <button onclick="search()">Search</button> -->
+        <button onclick="makeDoc()">Make Document</button>
         <button onclick="removeDuplicate(JSON.parse(localStorage.getItem('indexArr')))">Empty trash</button>
     </div>
     <div id="searchResult" style="max-height: 90vh; overflow: auto;">
 
     </div>
 
-    <script>      
+    <script>  
 onload = ()=>{
     document.getElementById("searchInput").value = "";
     document.getElementById("searchInput").focus();
     fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
             .then(res => res.json())
-            .then(res=>{
+            .then(res=>{                
                 let searchArray = [];
                 let html = '';
                 const searchInput = document.getElementById("searchInput").value;
@@ -158,6 +159,68 @@ onload = ()=>{
                 document.write(JSON.stringify(res))
             })
         }
+
+        function makeDoc(){
+            fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+            .then(res => res.json())
+            .then(res=>{   
+                let docText = '';
+                let topic = '';
+                let answer = '';
+                res.forEach((i,idx)=>{
+                    if(i.answer === "a"){
+                        answer = "(K)"
+                    }else if(i.answer === "b"){
+                        answer = "(L)"
+                    }else if(i.answer === "c"){
+                        answer = "(M)"
+                    }else if(i.answer === "d"){
+                        answer = "(N)"
+                    }
+
+                    if(idx === 0){
+                        docText += `
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${i.sub_category}
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                        <br>                
+                        {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}উত্তরঃ ${answer}<br>
+
+                    `;
+                    }else{                    
+                        if(i.sub_category !== topic){
+                            docText += `
+                                {{line}}<br>
+                                {{line}}<br>
+                                ${res[idx].sub_category}
+                                {{line}}<br>
+                                {{line}}<br>
+                                ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                                <br>
+                                {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}উত্তরঃ ${answer}<br>
+                            `;
+                        }else{
+                            docText += `                          
+                                ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                                <br>
+                                {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}উত্তরঃ ${answer}<br>
+                            `;
+                        }
+                    }
+                    
+                    topic = i.sub_category;
+                
+                })
+
+                document.write(docText);
+
+            })
+            
+        }
+
     </script>
 </body>
 </html>
