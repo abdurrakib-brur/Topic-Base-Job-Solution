@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <div style="padding: 10px; display: flex; align-items: center; justify-content: space-evenly; column-gap: 100px;">
+    <div style="padding: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
         <input style="padding: 10px; flex-grow: 1; font-size: 18px;" onchange="search()" onkeyup="search()" type="text" id="searchInput" placeholder="Search question">
         <!-- <button onclick="search()">Search</button> -->
         <button onclick="makeDoc()">Make Document</button>
@@ -32,7 +32,14 @@ onload = ()=>{
             .then(res => res.json())
             .then(res=>{                
                 let searchArray = [];
-                let html = '';
+                let html = `
+                    <div style="text-align: center; color: #fff; border: 1px solid #444; padding: 10px; background: #333">
+                        <h2>
+                            ${res[0].subject}
+                        </h2>
+                        <h3>Total Questions: ${res.length}</h3>
+                    </div>
+                    `;
                 const searchInput = document.getElementById("searchInput").value;
                 res.forEach((element, i) => {
                     if(element.question.includes(searchInput)){
