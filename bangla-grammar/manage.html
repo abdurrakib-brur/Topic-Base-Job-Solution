@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search in Json</title>
+    <title>Manage Page</title>
+    <style>
+        .showAnsBtn{
+          background: #ddd;  
+        }
+        .qsnAns{
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div style="padding: 10px; display: flex; align-items: center; justify-content: space-evenly; column-gap: 100px;">
@@ -40,7 +48,10 @@ onload = ()=>{
                         <p>b) ${i.b}</p>
                         <p>c) ${i.c}</p>
                         <p>d) ${i.d}</p>
-                        <p>Ans: ${i.answer}</p>
+                        <div onclick="showAns(this)">
+                            <button class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${i.answer})</p>
+                        </div>
                         <p>Index: ${i.index_of_main}</p>
                         
                         <div onclick="saveForDelete(this)" style="text-align: left;">
@@ -89,7 +100,10 @@ onload = ()=>{
                         <p>b) ${i.b}</p>
                         <p>c) ${i.c}</p>
                         <p>d) ${i.d}</p>
-                        <p>Ans: ${i.answer}</p>
+                        <div onclick="showAns(this)">
+                            <button class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${i.answer})</p>
+                        </div>
                         <p>Index: ${i.index_of_main}</p>
                         
                         <div onclick="saveForDelete(this)" style="text-align: left;">
@@ -220,7 +234,17 @@ onload = ()=>{
             })
             
         }
-
+        function showAns(showBtn){
+            if(showBtn.children[1].style.display ==="none"){
+                showBtn.children[1].style.display ="block";
+                showBtn.children[0].textContent ="Hide Answer";
+            }else{
+                showBtn.children[1].style.display ="none";
+                showBtn.children[0].textContent ="Show Answer";
+            }
+            
+            
+        }
     </script>
 </body>
 </html>
