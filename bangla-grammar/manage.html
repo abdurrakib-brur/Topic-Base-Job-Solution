@@ -55,11 +55,15 @@ onload = ()=>{
                         <p>b) ${i.b}</p>
                         <p>c) ${i.c}</p>
                         <p>d) ${i.d}</p>
-                        <div onclick="showAns(this)">
-                            <button class="showAnsBtn" >Show Answer</button>
+                        <div>
+                            <button onclick="showAns(this)" class="showAnsBtn" >Show Answer</button>
                             <p class="qsnAns"><span>Ans: </span>(${i.answer})</p>
                         </div>
-                        <p>Index: ${i.index_of_main}</p>
+                        <div style="font-size: 12px; padding: 7px 15px; background: #eee; display: inline-block; margin: 10px 0; border-radius: 8px;">
+                            <p>Topic: ${i.sub_category}</p>
+                            <p>Ref: ${i.tag}</p>
+                            <p>Index: ${i.index_of_main}</p>
+                        </div>
                         
                         <div onclick="saveForDelete(this)" style="text-align: left;">
                             <input type="hidden" value="${i.index_of_main}">
@@ -107,11 +111,15 @@ onload = ()=>{
                         <p>b) ${i.b}</p>
                         <p>c) ${i.c}</p>
                         <p>d) ${i.d}</p>
-                        <div onclick="showAns(this)">
-                            <button class="showAnsBtn" >Show Answer</button>
+                        <div>
+                            <button onclick="showAns(this)" class="showAnsBtn" >Show Answer</button>
                             <p class="qsnAns"><span>Ans: </span>(${i.answer})</p>
                         </div>
-                        <p>Index: ${i.index_of_main}</p>
+                        <div style="font-size: 12px; padding: 7px 15px; background: #eee; display: inline-block; margin: 10px 0; border-radius: 8px;">
+                            <p>Topic: ${i.sub_category}</p>
+                            <p>Ref: ${i.tag}</p>
+                            <p>Index: ${i.index_of_main}</p>
+                        </div>
                         
                         <div onclick="saveForDelete(this)" style="text-align: left;">
                             <input type="hidden" value="${i.index_of_main}">
@@ -245,12 +253,12 @@ onload = ()=>{
             
         }
         function showAns(showBtn){
-            if(showBtn.children[1].style.display ==="none"){
-                showBtn.children[1].style.display ="block";
-                showBtn.children[0].textContent ="Hide Answer";
+            if(showBtn.parentElement.children[1].style.display ==="none"){
+                showBtn.parentElement.children[1].style.display ="block";
+                showBtn.parentElement.children[0].textContent ="Hide Answer";
             }else{
-                showBtn.children[1].style.display ="none";
-                showBtn.children[0].textContent ="Show Answer";
+                showBtn.parentElement.children[1].style.display ="none";
+                showBtn.parentElement.children[0].textContent ="Show Answer";
             }
             
             
