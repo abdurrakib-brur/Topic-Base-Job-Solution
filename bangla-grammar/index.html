@@ -9,6 +9,7 @@
             box-sizing: border-box;
         }
         body{
+            position: relative;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -142,7 +143,7 @@
             width: 90px;
         }
         #goTop{
-            position: sticky;
+            position: absolute;
             bottom: 60px;
             padding: 7px 12px;
             background: #000000e6;
@@ -152,6 +153,7 @@
             font-size: 16px;
             font-weight: bold;
             margin: 10px;
+            right: 0px;
         }
         a{
             text-decoration: none;
@@ -194,7 +196,6 @@
         </div>
     </div>
 
-    <a href="#heading" id="goTop">^ Top</a>
 
     <div class="qsn__search">
         <div class="search__box">
@@ -205,6 +206,7 @@
             <button onclick="findQsn()">Find</button>
         </div>
     </div>
+    <a href="#heading" id="goTop">^ Top</a>
     
     <script>
         fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
