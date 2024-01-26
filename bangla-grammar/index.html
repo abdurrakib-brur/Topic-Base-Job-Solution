@@ -223,7 +223,11 @@
             `;
             let latestUniqueTopic = [];
             uniqueTopic.forEach((i,idx)=>{
-                latestUniqueTopic.push(uniqueTopic[uniqueTopic.length - idx - 1]);
+                //OPPOSITE INDEX
+                // latestUniqueTopic.push(uniqueTopic[uniqueTopic.length - idx - 1]);
+                
+                //CURRENT INDEX
+                latestUniqueTopic.push(uniqueTopic[idx]);
             })
             latestUniqueTopic.forEach((i) => {
                 topicContainer += `
