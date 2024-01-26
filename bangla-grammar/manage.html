@@ -217,7 +217,7 @@ onload = ()=>{
                         ${i.sub_category}<br>
                         {{line}}<br>
                         {{line}}<br>
-                        ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                        ${i.q_no}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
                         <br>                
                         {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
 
@@ -230,13 +230,13 @@ onload = ()=>{
                                 ${res[idx].sub_category}
                                 {{line}}<br>
                                 {{line}}<br>
-                                ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                                ${i.q_no}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
                                 <br>
                                 {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
                             `;
                         }else{
                             docText += `                          
-                                ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                                ${i.q_no}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
                                 <br>
                                 {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
                             `;
