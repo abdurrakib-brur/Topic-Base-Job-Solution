@@ -28,7 +28,7 @@
 onload = ()=>{
     document.getElementById("searchInput").value = "";
     document.getElementById("searchInput").focus();
-    fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+    fetch("./data.json")
             .then(res => res.json())
             .then(res=>{                
                 let searchArray = [];
@@ -91,7 +91,7 @@ onload = ()=>{
             })
 }
         function search(){            
-            fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+            fetch("./data.json")
             .then(res => res.json())
             .then(res=>{
                 let searchArray = [];
@@ -171,7 +171,7 @@ onload = ()=>{
             }
 
         function removeDuplicate(indexArr){
-            fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+            fetch("./data.json")
             .then(res => res.json())
             .then(res=>{
                 let idx = [];
@@ -190,7 +190,7 @@ onload = ()=>{
         }
 
         function makeDoc(){
-            fetch("https://abdurrakib-brur.github.io/Topic-Base-Job-Solution/bangla-grammar/data.json")
+            fetch("./data.json")
             .then(res => res.json())
             .then(res=>{   
                 let docText = '';
