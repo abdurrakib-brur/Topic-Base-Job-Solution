@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Page</title>
+    <style>
+        .showAnsBtn{
+          background: #ddd;  
+        }
+        .qsnAns{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+        <input style="padding: 10px; flex-grow: 1; font-size: 18px;" onchange="search()" type="text" id="searchInput" placeholder="Search question">
+        <!-- <button onclick="search()">Search</button> -->
+        <button onclick="makeDoc()">Make Document</button>
+        <button onclick="removeDuplicate(JSON.parse(localStorage.getItem('indexArr')))">Empty trash</button>
+    </div>
+    <div id="searchResult" style="max-height: 90vh; overflow: auto;">
+
+    </div>
+
+    <script>  
+onload = ()=>{
+    document.getElementById("searchInput").value = "";
+    document.getElementById("searchInput").focus();
+    fetch("./data.json")
+            .then(res => res.json())
+            .then(res=>{                
+                let searchArray = [];
+                let html = `
+                    <div style="text-align: center; color: #fff; border: 1px solid #444; padding: 10px; background: #333">
+                        <h2>
+                            ${res[0].subject}
+                        </h2>
+                        <h3>Total Questions: ${res.length}</h3>
+                    </div>
+                    `;
+                const searchInput = document.getElementById("searchInput").value;
+                res.forEach((element, i) => {
+                    if(element.question.includes(searchInput)){
+                        element.index_of_main = i;
+                        searchArray.push(element)
+                    }
+                });
+                searchArray.forEach((i )=> {
+                    html += `
+                    <div style="margin: 10px; padding: 10px; border-radius: 4px; border:1px solid #444" id="qsn-${i.index_of_main}">
+                        <h3>${i.question}</h3>
+                        <p>a) ${i.a}</p>
+                        <p>b) ${i.b}</p>
+                        <p>c) ${i.c}</p>
+                        <p>d) ${i.d}</p>
+                        <div>
+                            <button onclick="showAns(this)" class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${i.answer})</p>
+                        </div>
+                        <div style="font-size: 12px; padding: 7px 15px; background: #eee; display: inline-block; margin: 10px 0; border-radius: 8px;">
+                            <p>Topic: ${i.sub_category}</p>
+                            <p>Ref: ${i.tag}</p>
+                            <p>Index: ${i.index_of_main}</p>
+                        </div>
+                        
+                        <div onclick="saveForDelete(this)" style="text-align: left;">
+                            <input type="hidden" value="${i.index_of_main}">
+                            <button>Move to trash</button>
+                        </div>
+                    </div>
+                    `;
+                })
+                document.getElementById("searchResult").innerHTML = html;
+
+                if(JSON.parse(localStorage.getItem("indexArr")) !== null){
+                    let idx = [];
+                    let indexArr = JSON.parse(localStorage.getItem("indexArr"));
+                    indexArr.forEach(i=>{
+                        idx.push(parseInt(i));
+                    })
+                    for(var i=0; i<idx.length; i++){
+                        if(document.getElementById("qsn-"+idx[i])){
+                            document.getElementById("qsn-"+idx[i]).style.display = "none";
+                        }
+                    }
+                }
+
+
+            })
+}
+        function search(){            
+            fetch("./data.json")
+            .then(res => res.json())
+            .then(res=>{
+                let searchArray = [];
+                let html = '';
+                const searchInput = document.getElementById("searchInput").value;
+                res.forEach((element, i) => {
+                    if(element.question.includes(searchInput)){
+                        element.index_of_main = i;
+                        searchArray.push(element)
+                    }
+                });
+                searchArray.forEach((i )=> {
+                    html += `
+                    <div style="margin: 10px; padding: 10px; border-radius: 4px; border:1px solid #444" id="qsn-${i.index_of_main}s">
+                        <h3>${i.question}</h3>
+                        <p>a) ${i.a}</p>
+                        <p>b) ${i.b}</p>
+                        <p>c) ${i.c}</p>
+                        <p>d) ${i.d}</p>
+                        <div>
+                            <button onclick="showAns(this)" class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${i.answer})</p>
+                        </div>
+                        <div style="font-size: 12px; padding: 7px 15px; background: #eee; display: inline-block; margin: 10px 0; border-radius: 8px;">
+                            <p>Topic: ${i.sub_category}</p>
+                            <p>Ref: ${i.tag}</p>
+                            <p>Index: ${i.index_of_main}</p>
+                        </div>
+                        
+                        <div onclick="saveForDelete(this)" style="text-align: left;">
+                            <input type="hidden" value="${i.index_of_main}">
+                            <button>Move to trash</button>
+                        </div>
+                    </div>
+                    `;
+                })
+                document.getElementById("searchResult").innerHTML = html;
+
+                if(JSON.parse(localStorage.getItem("indexArr")) !== null){
+                    let idx = [];
+                    let indexArr = JSON.parse(localStorage.getItem("indexArr"));
+                    indexArr.forEach(i=>{
+                        idx.push(parseInt(i));
+                    })
+                    for(var i=0; i<idx.length; i++){
+                        if(document.getElementById("qsn-"+idx[i]+"s")){
+                            document.getElementById("qsn-"+idx[i]+"s").style.display = "none";
+                        }
+                    }
+                }
+
+
+            })
+            
+          
+        }
+
+        function saveForDelete(el){                
+                if(localStorage.getItem("indexArr") === null){
+                    
+                    let indexArr = [];
+                    const indexForSave = el.children[0].value;
+                    indexArr.push(indexForSave);
+                    localStorage.setItem("indexArr", JSON.stringify(indexArr));
+                }else{
+                    let indexArr = JSON.parse(localStorage.getItem("indexArr"));                
+                    const indexForSave = el.children[0].value;
+                    indexArr.push(indexForSave);
+                    localStorage.setItem("indexArr", JSON.stringify(indexArr));
+                }
+
+                console.log(JSON.parse(localStorage.getItem("indexArr")));
+                
+
+                el.style.display = 'none';
+                el.parentElement.style.display = 'none';
+            }
+
+        function removeDuplicate(indexArr){
+            fetch("./data.json")
+            .then(res => res.json())
+            .then(res=>{
+                let idx = [];
+                indexArr.forEach(i=>{
+                    idx.push(parseInt(i));
+                })
+                
+                for(var i = 0 ; i<idx.length; i++){
+                    res.splice(idx[i],1)
+                }
+
+                // localStorage.removeItem("indexArr");
+
+                document.write(JSON.stringify(res))
+            })
+        }
+
+        function makeDoc(){
+            fetch("./data.json")
+            .then(res => res.json())
+            .then(res=>{   
+                let docText = '';
+                let topic = '';
+                let answer = '';
+                res.forEach((i,idx)=>{
+                    if(i.answer === "a"){
+                        answer = "(K)"
+                    }else if(i.answer === "b"){
+                        answer = "(L)"
+                    }else if(i.answer === "c"){
+                        answer = "(M)"
+                    }else if(i.answer === "d"){
+                        answer = "(N)"
+                    }
+
+                    if(idx === 0){
+                        docText += `
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${i.subject}<br>
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${i.sub_category}<br>
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${i.q_no}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                        <br>                
+                        {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
+
+                    `;
+                    }else{                    
+                        if(i.sub_category !== topic){
+                            docText += `
+                                {{line}}<br>
+                                {{line}}<br>
+                                ${res[idx].sub_category}
+                                {{line}}<br>
+                                {{line}}<br>
+                                ${i.q_no}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                                <br>
+                                {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
+                            `;
+                        }else{
+                            docText += `                          
+                                ${i.q_no}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                                <br>
+                                {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
+                            `;
+                        }
+                    }
+                    
+                    topic = i.sub_category;
+                
+                })
+
+                document.write(docText);
+
+            })
+            
+        }
+        function showAns(showBtn){
+            if(showBtn.parentElement.children[1].style.display ==="none"){
+                showBtn.parentElement.children[1].style.display ="block";
+                showBtn.parentElement.children[0].textContent ="Hide Answer";
+            }else{
+                showBtn.parentElement.children[1].style.display ="none";
+                showBtn.parentElement.children[0].textContent ="Show Answer";
+            }
+            
+            
+        }
+    </script>
+</body>
+</html>

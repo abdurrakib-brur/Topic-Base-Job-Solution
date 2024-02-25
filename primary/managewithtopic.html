@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Base Job Solution</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            position: relative;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #f8f8f8;
+        }
+        .navbar{
+            padding: 5px 10px;
+            border-bottom: 2px solid #ddd;
+            height: 70px;
+        }
+        .navbar h2{
+            text-align: center;
+            font-size: 22px;
+        }
+        .container{
+            display: flex;
+            row-gap: 30px;
+            min-height: 100vh;
+            align-items: stretch;
+        }
+        #topicContainer{
+            padding: 20px 10px;
+            font-size: 16px;
+            width: 30%;
+            background: #fff;
+            max-height: calc(100vh - 60px);
+            overflow: auto;
+            height: 100%;
+            margin: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .topic__list{
+            padding: 10px;
+            cursor: pointer;
+        }
+        .topic__list a:hover{
+            color: #FF057C;
+        }
+        .topic__list a{
+            color: #1d74d2;
+        }
+        .topic__heading{
+            background-image: linear-gradient(-225deg, #FF057C 0%, #8D0B93 50%, #321575 100%);
+             padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            color: #fff;
+            border: #321575 1px solid;
+        }
+        .topic__heading h3{
+            text-align: center;
+            font-size: 20px;
+            /* line-height: 23px; */
+        }
+
+        #qsnContiner{
+            padding: 10px 20px;
+            /* max-width: 500px;
+            margin: 0 auto; */
+            /* margin-top: 40px; */
+            max-height: calc(100vh - 60px);
+            overflow: auto;
+            width: 70%;
+        }
+        .qsn__item{
+            padding: 10px 20px 10px 20px;
+            background: #fff;
+            margin: 30px 0;
+            border-radius: 8px;
+            /* border: 1px solid #333; */
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        }
+
+        .qsn__option{
+            font-size: 16px;
+            line-height: 23px;
+        }
+        .qsn{
+            font-size: 16px;
+            line-height: 23px;
+            font-weight: 600;
+        }
+        .showAnsBtn{
+            display: block;
+            padding: 5px;
+            text-align: center;
+            background: #111;
+            border-radius: 4px;
+            font-size: 14px;
+            border: 1px solid #111;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            color: #fff;
+        }
+        .qsnAns{
+            display: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: #f6f6f6;
+        }
+        .qsnTag{
+            font-size: 12px;
+            background: #eee;
+            margin-top: 10px;
+            display: block;
+            padding: 5px;
+            border-radius: 8px;
+            word-wrap: break-word;
+        }
+        .qsn__search{
+            display: flex;
+            /* max-width: 100; */
+            height: 40px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            align-items: center;
+            background: #fff;
+            position: fixed;
+            bottom: 0;
+        }
+        .search__box{
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        .search__box input{
+            width: 90px;
+        }
+        #goTop{
+            position: absolute;
+            bottom: 140px;
+            padding: 7px 12px;
+            background: #000000cb;
+            display: inline;
+            color: #fff;
+            z-index: 999;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px;
+            right: 0px;
+        }
+        a{
+            text-decoration: none;
+        }
+
+        @media screen and (max-width: 600px){            
+            .container{
+                display: block;
+                min-height: 100%;
+            }
+            #topicContainer{
+                width: auto;
+                word-wrap: break-word;
+                margin: 20px;
+                height: 100vh;
+            }
+            #qsnContiner{
+                max-height: 100%;
+                overflow: inherit;
+                width: 100%;
+            }
+            .search__box input{
+                width: 50px;
+            }
+        .search__box{
+            font-size: 14px;
+        }
+        #goTop{
+            position: sticky;
+            bottom: 50px;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>Topic Base Job Solution</h2>
+    </div>
+    <div class="container">
+        <div id="topicContainer">
+        </div>
+        <div id="qsnContiner">
+            
+        </div>
+    </div>
+
+
+    <div class="qsn__search">
+        <div class="search__box">
+            <b>Find Question</b>
+            <input id="qno" placeholder="Question No." type="number">
+            <b>/</b>
+            <b id="totalQsn"></b>
+            <button onclick="findQsn()">Find</button>
+        </div>
+    </div>
+    <a href="#heading" id="goTop">^ Top</a>
+    
+    <script>
+        fetch("./data.json")
+        .then(res => res.json())
+        .then(res=>{
+            // makeList(res)
+            makeTopic(res)
+        })
+       
+       
+        function makeTopic(res){
+            let uniqueTopic = [...new Set(res.map((item) => item.sub_category))];
+            const sub = res[0].subject
+            let topicContainer = `
+                <h3 class="topic__sub">${sub} এর টপিকসমূহ</h3>
+            `;
+            let latestUniqueTopic = [];
+            uniqueTopic.forEach((i,idx)=>{
+                //OPPOSITE INDEX
+                // latestUniqueTopic.push(uniqueTopic[uniqueTopic.length - idx - 1]);
+                
+                //CURRENT INDEX
+                latestUniqueTopic.push(uniqueTopic[idx]);
+            })
+            latestUniqueTopic.forEach((i) => {
+                topicContainer += `
+                    <div class="topic__list"><a href="#heading" onclick="makeQsnList(this)">${i}</a></div>
+                    
+                `;
+            })
+            document.getElementById("topicContainer").innerHTML = topicContainer;
+            firstQsnList(latestUniqueTopic[0]);
+        }
+
+
+        function firstQsnList(topic){
+        qsnContiner.innerHTML = `
+        <div style="height: 50vh; padding: 20px; text-align: center; font-size: 16px; font-weight: bold;">
+            Loading...
+            </div>`;
+        const myTopic = topic;
+        fetch("./data.json")
+        .then(res => res.json())
+        .then(res=>{
+            let topicList = res.filter((items)=>{
+                return items.sub_category == myTopic;
+            })
+            document.getElementById("totalQsn").textContent = topicList.length;
+            const qsnContiner = document.getElementById("qsnContiner");
+            let html =`
+                <div id="heading" class="topic__heading">
+                    <h3>${myTopic}</h3>
+                    <b>মোট প্রশ্ন: ${topicList.length} টি</b>
+                    <div>
+                        <button style="margin: 20px; cursor: pointer" id="makeDoc">Make Document</button>
+                    </div>                    
+                </div>
+            `;
+            topicList.forEach((el, i) => {
+                html += `
+                    <div class="qsn__item" id="qsn-${i+1}">
+                        <h4 class="qsn"><span>${i+1}. </span>${el.question}</h4>
+                        <p class="qsn__option"><b>(a) </b>${el.a}</p>
+                        <p class="qsn__option"><b>(b) </b>${el.b}</p>
+                        <p class="qsn__option"><b>(c) </b>${el.c}</p>
+                        <p class="qsn__option"><b>(d) </b>${el.d}</p>
+                        <div onclick="showAns(this)">
+                            <button class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${el.answer})</p>
+                        </div>
+                        <p class="qsnTag">${el.tag}</p>
+
+                    </div>
+                `;
+            });
+
+            qsnContiner.innerHTML = html;
+            makeDoc(topicList)
+        })
+
+       }
+       
+       function makeQsnList(topic){
+        qsnContiner.innerHTML = `
+            <div style="height: 50vh; padding: 20px; text-align: center; font-size: 16px; font-weight: bold;">
+                Loading...
+                </div>`;
+        const myTopic = topic.textContent;
+        fetch("./data.json")
+        .then(res => res.json())
+        .then(res=>{
+            let topicList = res.filter((items)=>{
+                return items.sub_category == myTopic;
+            })
+            document.getElementById("totalQsn").textContent = topicList.length;
+            const qsnContiner = document.getElementById("qsnContiner");
+            let html =`
+                <div id="heading" class="topic__heading">
+                    <h3>${myTopic}</h3>
+                    <b>মোট প্রশ্ন: ${topicList.length} টি</b>
+                    <div>
+                        <button style="margin: 20px; cursor: pointer" id="makeDoc">Make Document</button>
+                    </div>
+                </div>
+            `;
+            topicList.forEach((el, i) => {
+                html += `
+                    <div class="qsn__item" id="qsn-${i+1}">
+                        <h4 class="qsn"><span>${i+1}. </span>${el.question}</h4>
+                        <p class="qsn__option"><b>(a) </b>${el.a}</p>
+                        <p class="qsn__option"><b>(b) </b>${el.b}</p>
+                        <p class="qsn__option"><b>(c) </b>${el.c}</p>
+                        <p class="qsn__option"><b>(d) </b>${el.d}</p>
+                        <div onclick="showAns(this)">
+                            <button class="showAnsBtn" >Show Answer</button>
+                            <p class="qsnAns"><span>Ans: </span>(${el.answer})</p>
+                        </div>
+                        <p class="qsnTag">${el.tag}</p>
+
+                    </div>
+                `;
+            });
+
+            
+
+            qsnContiner.innerHTML = html;
+            location.href ="#heading";
+            makeDoc(topicList)
+        })
+
+       }
+        
+
+       function findQsn(){
+            let qno = document.getElementById("qno").value;
+            document.getElementById("qno").value = "";
+            if(!qno == "" && !parseInt(document.getElementById("totalQsn").textContent) < qno ){
+                window.location.href = "#qsn-"+qno;
+                
+            }
+            if(parseInt(document.getElementById("totalQsn").textContent) < qno ){
+                alert("You enter a number lager than total question");
+            }
+
+        }
+        
+        function showAns(showBtn){
+            if(showBtn.children[1].style.display ==="none"){
+                showBtn.children[1].style.display ="block";
+                showBtn.children[0].textContent ="Hide Answer";
+            }else{
+                showBtn.children[1].style.display ="none";
+                showBtn.children[0].textContent ="Show Answer";
+            }
+            
+            
+        }
+
+        function makeDoc(topicBaseList){
+            document.getElementById("makeDoc").addEventListener("click", ()=>{                          
+                let docText = '';
+                let topic = '';
+                let answer = '';
+                let options = '';
+                topicBaseList.forEach((i,idx)=>{
+                    if(i.answer === "a"){
+                        answer = "(K)"
+                        options = `
+                            {{tab}}[[(K)]] ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
+                        `;
+                    }else if(i.answer === "b"){
+                        answer = "(L)"
+                        options = `
+                            {{tab}}(K) ${i.a}{{tab}}[[(L)]] ${i.b}{{tab}}(M) ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
+                        `;
+                    }else if(i.answer === "c"){
+                        answer = "(M)"
+                        options = `
+                            {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}[[(M)]] ${i.c}{{tab}}(N) ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
+                        `;
+                    }else if(i.answer === "d"){
+                        answer = "(N)"
+                        options = `
+                            {{tab}}(K) ${i.a}{{tab}}(L) ${i.b}{{tab}}(M) ${i.c}{{tab}}[[(N)]] ${i.d}{{tab}}[[-উত্তরঃ ${answer}-]]<br>
+                        `;
+                    }
+
+                    if(idx === 0){
+                        docText += `
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${i.subject}<br>
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${i.sub_category}<br>
+                        {{line}}<br>
+                        {{line}}<br>
+                        ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                        <br>                
+                        ${options}
+                    `;
+                    }else{                  
+                                                  
+                            docText += `                          
+                                ${idx+1}.{{tab}}${i.question}{{tag_tab}}[${i.tag}]
+                                <br>
+                                ${options}
+                            `;
+                        
+                    }
+                    
+                    topic = i.sub_category;
+                
+                })
+
+                document.write(docText);
+
+            })
+            
+        }
+    </script>
+</body>
+</html>
